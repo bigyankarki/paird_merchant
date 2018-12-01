@@ -154,6 +154,10 @@ android {
 }
 
 dependencies {
+    implementation(project(':react-native-google-signin'))
+    implementation(project(':react-native-gesture-handler'))
+    implementation(project(':react-native-firebase'))
+    implementation "com.android.support:appcompat-v7:23.0.1"
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation fileTree(dir: "libs", include: ["*.jar"])
