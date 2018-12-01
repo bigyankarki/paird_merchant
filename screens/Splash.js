@@ -19,19 +19,23 @@ export default class Splash extends React.Component {
   }
 
   isNewMerchant = async (id) => {
-    // const ref = await firebase.firestore().collection('merchants').doc(id);
-    //
-    // firebase.firestore().runTransaction(async transaction => {
-    //   let doc = await transaction.get(ref)
-    //
-    //   (!doc.exists) ? return true : return false;
-    //
-    // }).then(res => {
-    //   console.log("successfully got post request." + res);
-    // }).catch(error => {
-    //   console.log("error is " + error);
-    // })
-    return  false
+    const ref = await firebase.firestore().collection('merchants').doc(id);
+
+    let isNew = await ref.get().then(doc => {
+    if (doc.exists) {
+        console.log("User exists :", doc.data());
+        return false;
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("New User!");
+        return true;
+    }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+
+    return isNew;
+
   }
 
   //Google signIN
@@ -43,7 +47,7 @@ export default class Splash extends React.Component {
       this.setState({ info : userInfo });
 
       if(userInfo){
-        let isNew = this.isNewMerchant(userInfo.user.id);
+        let isNew = await this.isNewMerchant(userInfo.user.id);
         console.log(isNew);
 
         (() => {
