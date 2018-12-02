@@ -50,9 +50,15 @@ export default class Splash extends React.Component {
         let isNew = await this.isNewMerchant(userInfo.user.id);
         console.log(isNew);
 
-        (() => {
-          this.props.navigation.navigate('Homepage')
-        })()
+        if(isNew){
+          (() => {
+            this.props.navigation.navigate('SignUp', {userInfo : userInfo})
+          })()
+        } else{
+          (() => {
+            this.props.navigation.navigate('Homepage')
+          })()
+        }
       }
 
     } catch (error) {
