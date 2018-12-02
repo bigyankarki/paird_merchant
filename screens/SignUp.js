@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 
 import firebase from 'react-native-firebase';
 
@@ -24,12 +24,10 @@ export default class SignUp extends React.Component {
           <Text>Hi {this.state.userInfo.user.givenName}!</Text>
           <Text>Looks like you are new to Paird.</Text>
           <Text>Please complete the form to signup.</Text>
-          <GoogleSigninButton
-            style={{ width: 312, height: 48 }}
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={this.GSignIn}
-            disabled={this.state.isSigninInProgress} />
+          <FormLabel>Name</FormLabel>
+          <FormInput onChangeText={alert("gi")}/>
+          <FormValidationMessage>Error message</FormValidationMessage>
+
         </View>
     );
   }
