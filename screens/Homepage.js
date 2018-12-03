@@ -1,14 +1,23 @@
 import React from 'react';
 import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
+import { Card, ListItem, Button } from 'react-native-elements'
+
 
 import firebase from 'react-native-firebase';
 import {createStackNavigator} from 'react-navigation';
 
 export default class Splash extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {};
   }
+
+  static navigationOptions = ({ navigation }) => {
+    let name = navigation.getParam('userInfo', 'A Nested Details Screen')
+    return {
+      title: `Welcome ${name.user.givenName}`
+    };
+  };
 
   async componentDidMount() {
     // TODO: You: Do firebase things
@@ -19,45 +28,29 @@ export default class Splash extends React.Component {
   }
 
   render() {
+    const users = [
+     {
+        name: 'brynn',
+        avatar: 'https://www.recipetineats.com/wp-content/uploads/2018/05/Chicken-Pad-Thai_0.jpg'
+     }]
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Image source={require('../assets/ReactNativeFirebase.png')} style={[styles.logo]}/>
-          <Text style={styles.welcome}>
-            Welcome to {'\n'} React Native Firebase
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit App.js
-          </Text>
-          {Platform.OS === 'ios' ? (
-            <Text style={styles.instructions}>
-              Press Cmd+R to reload,{'\n'}
-              Cmd+D or shake for dev menu
+          <Text>This is a homepage</Text>
+
+
+          <Card
+            title='HELLO WORLD'
+            image={{uri: 'https://www.recipetineats.com/wp-content/uploads/2018/05/Chicken-Pad-Thai_0.jpg' }}>
+            <Text style={{marginBottom: 10}}>
+              The idea with React Native Elements is more about component structure than actual design.
             </Text>
-          ) : (
-            <Text style={styles.instructions}>
-              Double tap R on your keyboard to reload,{'\n'}
-              Cmd+M or shake for dev menu
-            </Text>
-          )}
-          <View style={styles.modules}>
-            <Text style={styles.modulesHeader}>The following Firebase modules are pre-installed:</Text>
-            {firebase.admob.nativeModuleExists && <Text style={styles.module}>admob()</Text>}
-            {firebase.analytics.nativeModuleExists && <Text style={styles.module}>analytics()</Text>}
-            {firebase.auth.nativeModuleExists && <Text style={styles.module}>auth()</Text>}
-            {firebase.config.nativeModuleExists && <Text style={styles.module}>config()</Text>}
-            {firebase.crashlytics.nativeModuleExists && <Text style={styles.module}>crashlytics()</Text>}
-            {firebase.database.nativeModuleExists && <Text style={styles.module}>database()</Text>}
-            {firebase.firestore.nativeModuleExists && <Text style={styles.module}>firestore()</Text>}
-            {firebase.functions.nativeModuleExists && <Text style={styles.module}>functions()</Text>}
-            {firebase.iid.nativeModuleExists && <Text style={styles.module}>iid()</Text>}
-            {firebase.invites.nativeModuleExists && <Text style={styles.module}>invites()</Text>}
-            {firebase.links.nativeModuleExists && <Text style={styles.module}>links()</Text>}
-            {firebase.messaging.nativeModuleExists && <Text style={styles.module}>messaging()</Text>}
-            {firebase.notifications.nativeModuleExists && <Text style={styles.module}>notifications()</Text>}
-            {firebase.perf.nativeModuleExists && <Text style={styles.module}>perf()</Text>}
-            {firebase.storage.nativeModuleExists && <Text style={styles.module}>storage()</Text>}
-          </View>
+            <Button
+              icon={{name: 'code'}}
+              backgroundColor='#03A9F4'
+              buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+              title='VIEW NOW' />
+          </Card>
         </View>
       </ScrollView>
     );
@@ -70,34 +63,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 64,
-    padding: 10,
-    width: 135,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  modules: {
-    margin: 20,
-  },
-  modulesHeader: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  module: {
-    fontSize: 14,
-    marginTop: 4,
-    textAlign: 'center',
   }
 });

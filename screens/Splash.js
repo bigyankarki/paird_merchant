@@ -54,7 +54,7 @@ export default class Splash extends React.Component {
           })()
         } else{
           (() => {
-            this.props.navigation.push('Homepage')
+            this.props.navigation.push('Homepage', {userInfo : userInfo})
           })()
         }
       }
