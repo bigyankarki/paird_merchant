@@ -33,9 +33,7 @@ export default class Splash extends React.Component {
     }).catch(function(error) {
         console.log("Error getting document:", error);
     });
-
     return isNew;
-
   }
 
   //Google signIN
@@ -52,11 +50,11 @@ export default class Splash extends React.Component {
 
         if(isNew){
           (() => {
-            this.props.navigation.navigate('SignUp', {userInfo : userInfo})
+            this.props.navigation.push('SignUp', {userInfo : userInfo})
           })()
         } else{
           (() => {
-            this.props.navigation.navigate('Homepage')
+            this.props.navigation.push('Homepage')
           })()
         }
       }
