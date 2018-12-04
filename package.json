@@ -1,5 +1,5 @@
 {
-  "name": "RNFirebaseStarter",
+  "name": "paird",
   "version": "5.1.0",
   "private": true,
   "devDependencies": {
@@ -22,6 +22,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "package.json": "^2.0.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-firebase": "^5.1.1"
