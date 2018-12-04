@@ -5,15 +5,14 @@ import { Card, Button, ListItem, Icon, FormLabel, FormInput, Divider } from 'rea
 export default class ModalScreen extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
 
-        <Card title="Add an item">
+        <Card title="Add an item" style={styles.container}>
 
             <Icon
               raised
               name='add'
               color='#f50'
-              containerStyle ={{marginLeft:170, marginTop:100, marginBottom:100}}
+              containerStyle ={{marginLeft:160, marginTop:100, marginBottom:100}}
               onPress={() => console.log("add an image.")} />
 
               <Divider style={{ backgroundColor: 'gray' }} />
@@ -25,6 +24,9 @@ export default class ModalScreen extends React.Component {
               <FormLabel>Item description</FormLabel>
               <FormInput multiline={true} containerStyle={styles.inputField} onChangeText={text => console.log(text)}/>
 
+              <FormLabel>Item Price</FormLabel>
+              <FormInput containerStyle={styles.inputField} onChangeText={text => console.log(text)}/>
+
               <Button
                 icon={{name: 'send'}}
                 backgroundColor='#03A9F4'
@@ -34,7 +36,7 @@ export default class ModalScreen extends React.Component {
                 />
 
         </Card>
-      </View>
+
     );
   }
 }
@@ -42,7 +44,7 @@ export default class ModalScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
      justifyContent: 'center',
      alignItems: 'center',
      backgroundColor: '#F5FCFF',
