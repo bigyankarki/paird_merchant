@@ -2,11 +2,14 @@ import React from 'react';
 import { StyleSheet, Image, View, Text, ScrollView } from 'react-native';
 import { Card, Button, ListItem, Icon, FormLabel, FormInput, Divider } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
+import firebase from 'react-native-firebase';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export default class ModalScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userInfo: {},
       item_image_uri : '',
       item_name : '',
       item_description : '',
@@ -14,7 +17,15 @@ export default class ModalScreen extends React.Component {
     };
     this.pickImage = this.pickImage.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  componentWillMount() {
+    const { navigation } = this.props;
+    const info = navigation.getParam('userInfo', 'NO-ID');
+    this.setState({userInfo : info})
+  }
+
 
   pickImage = () => {
     ImagePicker.showImagePicker({title: "Pick an Image", maxWidth: 800, maxHeight: 600}, res => {
@@ -34,6 +45,10 @@ export default class ModalScreen extends React.Component {
     this.setState({[input] : text})
   }
 
+  handleSubmit = () => {
+  console.log("hi");
+  }
+
 
 
   render() {
@@ -49,25 +64,25 @@ export default class ModalScreen extends React.Component {
             color='#f50'
             containerStyle ={{marginLeft:160, marginTop:100, marginBottom:100}}
             onPress={this.pickImage} />
-        : <Image style={{width: 350, height: 350}} source={{uri:  this.state.item_image_uri}}/>}
+        : <Image style={{width: 350, height: 350}} source={{uri:this.state.item_image_uri}}/>}
 
               <Divider style={{ backgroundColor: 'gray' }} />
 
               <FormLabel>Item Name</FormLabel>
-              <FormInput containerStyle={styles.inputField} onChangeText={text => console.log(text)}/>
+              <FormInput containerStyle={styles.inputField} onChangeText={text => this.handleInputChange('item_name', text)}/>
 
               <FormLabel>Item description</FormLabel>
-              <FormInput multiline={true} containerStyle={styles.inputField} onChangeText={text => console.log(text)}/>
+              <FormInput multiline={true} containerStyle={styles.inputField} onChangeText={text => this.handleInputChange('item_description', text)}/>
 
               <FormLabel>Item Price</FormLabel>
-              <FormInput keyboardType='decimal-pad' containerStyle={styles.inputField} onChangeText={text => console.log(text)}/>
+              <FormInput keyboardType='decimal-pad' containerStyle={styles.inputField} onChangeText={text => this.handleInputChange('item_price', text)}/>
 
               <Button
                 icon={{name: 'send'}}
                 backgroundColor='#03A9F4'
                 buttonStyle={{borderRadius: 50, marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 20}}
                 title='SAVE'
-                onPress={() => this.props.navigation.goBack()}
+                onPress={this.handleSubmit}
                 />
 
               <Button

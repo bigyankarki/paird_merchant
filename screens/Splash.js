@@ -42,19 +42,25 @@ export default class Splash extends React.Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      this.setState({ info : userInfo });
+      const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken)
+      // login with credential
+      const currentUser = await firebase.auth().signInWithCredential(credential);
 
-      if(userInfo){
-        let isNew = await this.isNewMerchant(userInfo.user.id);
+      let user = currentUser.user._user
+      this.setState({ info : user });
+      console.log(user);
+
+      if(user){
+        let isNew = await this.isNewMerchant(user.uid);
         console.log(isNew);
 
         if(isNew){
           (() => {
-            this.props.navigation.push('SignUp', {userInfo : userInfo})
+            this.props.navigation.push('SignUp', {userInfo : user})
           })()
         } else{
           (() => {
-            this.props.navigation.push('Homepage', {userInfo : userInfo})
+            this.props.navigation.push('Homepage', {userInfo : user})
           })()
         }
       }

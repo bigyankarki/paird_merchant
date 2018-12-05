@@ -9,15 +9,23 @@ import {createStackNavigator} from 'react-navigation';
 export default class Splash extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      userInfo: {}
+    };
   }
 
   static navigationOptions = ({ navigation }) => {
     let name = navigation.getParam('userInfo', 'A Nested Details Screen')
     return {
-      title: `Welcome ${name.user.givenName}`
+      title: `Welcome ${name.displayName}`
     };
   };
+
+  componentWillMount() {
+    const { navigation } = this.props;
+    const info = navigation.getParam('userInfo', 'NO-ID');
+    this.setState({userInfo : info})
+  }
 
   async componentDidMount() {
     // TODO: You: Do firebase things
@@ -36,7 +44,7 @@ export default class Splash extends React.Component {
             raised
             name='add'
             color='#f50'
-            onPress={() => navigation.navigate('MyModal')} />
+            onPress={() => navigation.navigate('MyModal', {userInfo: this.state.userInfo})} />
           </Card>
         </View>
 

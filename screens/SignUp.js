@@ -36,10 +36,10 @@ export default class SignUp extends React.Component {
     const { navigation } = this.props;
     const info = this.state.userInfo;
     if(this.state.type != 'options'){
-      const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.user.id);
+      const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
       if(!ref.exists){
         ref.set({
-          userInfo: this.state.userInfo.user,
+          userInfo: this.state.userInfo,
           business_name: this.state.name,
           business_type: this.state.type,
           business_phone: this.state.phone,
@@ -65,7 +65,7 @@ export default class SignUp extends React.Component {
         <View >
 
           <View>
-            <Text>Hi {this.state.userInfo.user.givenName}!</Text>
+            <Text>Hi {this.state.userInfo.displayName}!</Text>
             <Text>Looks like you are new to Paird.</Text>
             <Text>Please complete the form to signup.</Text>
           </View>
