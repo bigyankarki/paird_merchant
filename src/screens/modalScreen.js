@@ -48,7 +48,7 @@ export default class ModalScreen extends React.Component {
 handleSubmit = async () => {
   const { navigation } = this.props;
   // store the image.
-  let image = await firebase.storage().ref('/merchants/'+firebase.auth().currentUser.uid).child('myimg.jpg')
+  let image = await firebase.storage().ref('/merchants/'+firebase.auth().currentUser.uid).child(`${this.state.item_name}`+'.jpg')
       .put(this.state.item_image_uri, { contentType : 'image/jpeg' }) //--> here just pass a uri
       .then((snapshot) => {
         // console.log(snapshot.downloadURL);
@@ -59,13 +59,14 @@ handleSubmit = async () => {
 
   // update database
   const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
+  const res = {
+    image_url : this.state.image_url,
+    item_name : this.state.item_name,
+    item_description : this.state.item_description,
+    item_price : this.state.item_price
+  }
   ref.update({
-    menu:[{
-      image_url : this.state.image_url,
-      item_name : this.state.item_name,
-      item_description : this.state.item_description,
-      item_price : this.state.item_price
-    }]
+    menu: firebase.firestore.FieldValue.arrayUnion(res)
   })
   .then(function() {
     console.log("Document successfully written!");
