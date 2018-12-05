@@ -6,7 +6,7 @@ import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 import {createStackNavigator} from 'react-navigation';
 
-export default class Splash extends React.Component {
+export default class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
