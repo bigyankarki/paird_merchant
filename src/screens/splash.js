@@ -23,11 +23,9 @@ export default class Splash extends React.Component {
 
     let isNew = await ref.get().then(doc => {
     if (doc.exists) {
-        console.log("User exists :", doc.data());
         return false;
     } else {
         // doc.data() will be undefined in this case
-        console.log("New User!");
         return true;
     }
     }).catch(function(error) {
@@ -48,7 +46,6 @@ export default class Splash extends React.Component {
 
       let user = currentUser.user._user
       this.setState({ info : user });
-      console.log(user);
 
       if(user){
         let isNew = await this.isNewMerchant(user.uid);

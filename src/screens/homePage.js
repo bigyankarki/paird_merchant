@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View } from 'react-native';
+import { StyleSheet, Platform, Image, ScrollView, Text, View } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-
-
 import firebase from 'react-native-firebase';
 import {createStackNavigator} from 'react-navigation';
 
@@ -10,7 +8,8 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: {}
+      userInfo: {},
+      items: []
     };
   }
 
@@ -28,15 +27,45 @@ export default class HomePage extends React.Component {
   }
 
   async componentDidMount() {
-    // TODO: You: Do firebase things
-    // const { user } = await firebase.auth().signInAnonymously();
-    // console.warn('User -> ', user.toJSON());
-
-    // await firebase.analytics().logEvent('foo', { bar: '123'});
+    const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
+    let items = [];
+    ref.get().then((snapshot) => {
+      snapshot.data().menu.forEach((doc) =>{
+        let res = {
+          item_description: doc.item_description,
+          image_url: doc.image_url
+        };
+        items.push(res);
+      })
+      this.setState({items:items})
+    })
+    .catch((error) =>{
+      console.log("Error: "+error);
+    })
   }
 
   render() {
     const { navigation } = this.props;
+    if(this.state.items){
+      return(
+        <ScrollView style={styles.container}>
+          <View>
+          {this.state.items.map((itemName,index) =>(
+            <Card title = {itemName.item_description} containerStyle={styles.card}>
+              <Image source={{uri: itemName.image_url}} style={{height:200, width:200}} resizeMode='stretch'/>
+            </Card>
+          ))}
+          <Card title="Add item" containerStyle={styles.card}>
+          <Icon
+            raised
+            name='add'
+            color='#f50'
+            onPress={() => navigation.navigate('MyModal', {userInfo: this.state.userInfo})} />
+          </Card>
+          </View>
+        </ScrollView>
+      );
+    }
     return (
         <View style={styles.container}>
           <Card title="Add item" containerStyle={styles.card}>
@@ -54,13 +83,9 @@ export default class HomePage extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#F5FCFF',
   },
   card:{
-    width:150,
-    height:200,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'center'
   }
 });
