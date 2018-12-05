@@ -25,5 +25,9 @@ target 'paird' do
   pod 'Firebase/Performance', '~> 5.11.0'
   pod 'Fabric', '~> 1.7.13'
   pod 'Crashlytics', '~> 3.10.9'
+  pod 'GoogleSignIn'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
 end
