@@ -58,15 +58,18 @@ handleSubmit = async () => {
   this.setState({image_url : image})
 
   // update database
-  const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
-  ref.update({
-    menu: {
-      image_url : this.state.image_url,
-      item_name : this.state.item_name,
-      item_description : this.state.item_description,
-      item_price : this.state.item_price
+  const res = {
+    image_url : this.state.image_url,
+    item_name : this.state.item_name,
+    item_description : this.state.item_description,
+    item_price : this.state.item_price
 
-    }
+  }
+  const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
+  let m = ref.child('menu')
+  m.p
+  ref.update({
+    m.push(res)
   })
   .then(function() {
     console.log("Document successfully written!");
