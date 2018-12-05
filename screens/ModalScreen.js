@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, Text, ScrollView, Platform } from 'react-native';
 import { Card, Button, ListItem, Icon, FormLabel, FormInput, Divider } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import firebase from 'react-native-firebase';
-import RNFetchBlob from 'rn-fetch-blob';
 
 export default class ModalScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userInfo: {},
+      image_url : '',
       item_image_uri : '',
       item_name : '',
       item_description : '',
@@ -45,9 +45,18 @@ export default class ModalScreen extends React.Component {
     this.setState({[input] : text})
   }
 
-  handleSubmit = () => {
-  console.log("hi");
-  }
+handleSubmit = async () => {
+  // store the image.
+  let image = await firebase.storage().ref('/merchants/'+firebase.auth().currentUser.uid).child('myimg.jpg')
+      .put(this.state.item_image_uri, { contentType : 'image/jpeg' }) //--> here just pass a uri
+      .then((snapshot) => {
+        // console.log(snapshot.downloadURL);
+        return snapshot.downloadURL
+      })
+
+
+
+}
 
 
 
