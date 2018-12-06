@@ -72,7 +72,8 @@ handleSubmit = async () => {
   .then(function() {
     console.log("Document successfully written!");
     (() => {
-      navigate('HomePage', {userInfo : userInfo})
+      navigation.state.params.onNav('false')
+      navigation.goBack()
     })()
   })
   .catch(function(error) {

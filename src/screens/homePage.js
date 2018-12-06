@@ -7,10 +7,16 @@ import {createStackNavigator} from 'react-navigation';
 export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.reRender = this.props.navigation.addListener('willFocus',()=>{
+      this.fetchDatabase();
+    })
     this.state = {
       userInfo: {},
-      items: []
+      items: [],
+      loading: ''
     };
+    this.fetchDatabase = this.fetchDatabase.bind(this);
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -26,7 +32,7 @@ export default class HomePage extends React.Component {
     this.setState({userInfo : info})
   }
 
-  async componentDidMount() {
+  async fetchDatabase() {
     const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
     let items = [];
     ref.get().then((snapshot) => {
@@ -44,6 +50,10 @@ export default class HomePage extends React.Component {
     })
   }
 
+  onClick = (foo) => {
+    this.setState({loading:foo})
+  }
+
   render() {
     const { navigation } = this.props;
     if(this.state.items){
@@ -51,7 +61,7 @@ export default class HomePage extends React.Component {
         <ScrollView style={styles.container}>
           <View>
           {this.state.items.map((itemName,index) =>(
-            <Card title = {itemName.item_description} containerStyle={styles.card}>
+            <Card key={index} title = {itemName.item_description} containerStyle={styles.card}>
               <Image source={{uri: itemName.image_url}} style={{height:200, width:200}} resizeMode='stretch'/>
             </Card>
           ))}
@@ -60,7 +70,7 @@ export default class HomePage extends React.Component {
             raised
             name='add'
             color='#f50'
-            onPress={() => navigation.navigate('MyModal', {userInfo: this.state.userInfo})} />
+            onPress={() => navigation.navigate('MyModal', {userInfo: this.state.userInfo, onNav: this.onClick})} />
           </Card>
           </View>
         </ScrollView>
