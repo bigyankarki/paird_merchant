@@ -1,31 +1,19 @@
 import React from 'react';
 import { StyleSheet, Platform, Image, Text, View } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-
-
 import firebase from 'react-native-firebase';
-import {createStackNavigator} from 'react-navigation';
 
-export default class Homepage extends React.Component {
+
+export default class Orders extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      userInfo: {}
-    };
+    this.state = {};
   }
 
-  static navigationOptions = ({ navigation }) => {
-    let name = navigation.getParam('userInfo', 'A Nested Details Screen')
-    return {
-      title: `Welcome ${name.displayName}`
-    };
-  };
 
-  componentWillMount() {
-    const { navigation } = this.props;
-    const info = navigation.getParam('userInfo', 'NO-ID');
-    this.setState({userInfo : info})
-  }
+  static navigationOptions = {
+    title: 'Orders',
+};
 
   async componentDidMount() {
     // TODO: You: Do firebase things
@@ -39,13 +27,7 @@ export default class Homepage extends React.Component {
     const { navigation } = this.props;
     return (
         <View style={styles.container}>
-          <Card title="Add item" containerStyle={styles.card}>
-          <Icon
-            raised
-            name='add'
-            color='#f50'
-            onPress={() => navigation.navigate('MyModal', {userInfo: this.state.userInfo})} />
-          </Card>
+          <Text>this is orders page.</Text>
         </View>
 
     );

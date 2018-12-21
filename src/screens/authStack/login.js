@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, Button } from 'react-native';
+import { StyleSheet, AsyncStorage, Image, Text, View } from 'react-native';
 import firebase from 'react-native-firebase';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 
@@ -14,13 +14,10 @@ export default class Splash extends React.Component {
       this.state = {
         info : {}
       }
-      this.GSignIn = this.GSignIn.bind(this);
-      this.isNewMerchant = this.isNewMerchant.bind(this);
   }
 
-  isNewMerchant = async (id) => {
+  isNewUser = async (id) => {
     const ref = await firebase.firestore().collection('merchants').doc(id);
-
     let isNew = await ref.get().then(doc => {
     if (doc.exists) {
         console.log("User exists :", doc.data());
@@ -37,7 +34,7 @@ export default class Splash extends React.Component {
   }
 
   //Google signIN
-  GSignIn = async () => {
+  handleLogin = async () => {
     GoogleSignin.configure();
     try {
       await GoogleSignin.hasPlayServices();
@@ -46,23 +43,14 @@ export default class Splash extends React.Component {
       // login with credential
       const currentUser = await firebase.auth().signInWithCredential(credential);
 
+      // check if the user is New.
       let user = currentUser.user._user
-      this.setState({ info : user });
-      console.log(user);
-
-      if(user){
-        let isNew = await this.isNewMerchant(user.uid);
-        console.log(isNew);
-
-        if(isNew){
-          (() => {
-            this.props.navigation.push('SignUp', {userInfo : user})
-          })()
-        } else{
-          (() => {
-            this.props.navigation.push('Homepage', {userInfo : user})
-          })()
-        }
+      let isNew = await this.isNewUser(user.uid)
+      if(isNew){
+        this.props.navigation.navigate('SignUp', {userInfo : user}); // navigate to app stack.
+      } else{
+        await AsyncStorage.setItem('userToken', user.uid); // set the async storage
+        this.props.navigation.navigate('App', {userInfo : user}); // navigate to app stack.
       }
 
     } catch (error) {
@@ -78,14 +66,6 @@ export default class Splash extends React.Component {
     }
 };
 
-  async componentDidMount() {
-    // TODO: You: Do firebase things
-    // const { user } = await firebase.auth().signInAnonymously();
-    // console.warn('User -> ', user.toJSON());
-
-    // await firebase.analytics().logEvent('foo', { bar: '123'});
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -94,7 +74,7 @@ export default class Splash extends React.Component {
         style={{ width: 312, height: 48 }}
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={this.GSignIn}
+        onPress={this.handleLogin}
         disabled={this.state.isSigninInProgress} />
         </View>
     );

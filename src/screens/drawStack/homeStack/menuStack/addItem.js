@@ -1,14 +1,13 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text, ScrollView, Platform } from 'react-native';
+import { StyleSheet, AsyncStorage, Image, View, Text, ScrollView, Platform } from 'react-native';
 import { Card, Button, ListItem, Icon, FormLabel, FormInput, Divider } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import firebase from 'react-native-firebase';
 
-export default class ModalScreen extends React.Component {
+export default class AddItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: {},
       image_url : '',
       item_image_uri : '',
       item_name : '',
@@ -20,12 +19,9 @@ export default class ModalScreen extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillMount() {
-    const { navigation } = this.props;
-    const info = navigation.getParam('userInfo', 'NO-ID');
-    this.setState({userInfo : info})
-  }
-
+  static navigationOptions = {
+    title: 'Add Item'
+  };
 
   pickImage = () => {
     ImagePicker.showImagePicker({title: "Pick an Image", maxWidth: 800, maxHeight: 600}, res => {
@@ -47,15 +43,16 @@ export default class ModalScreen extends React.Component {
 
 handleSubmit = async () => {
   const { navigation } = this.props;
+  const { navigate } = this.props.navigation;
+  const uid = await AsyncStorage.getItem('userToken');
+
   // store the image.
-  console.log(this.state.item_image_uri);
-  let image = await firebase.storage().ref('/merchants/'+firebase.auth().currentUser.uid).child(`${this.state.item_name}.jpg`)
+  let image = await firebase.storage().ref('/merchants/'+uid).child(`${this.state.item_name}`+'.jpg')
       .put(this.state.item_image_uri, { contentType : 'image/jpeg' }) //--> here just pass a uri
       .then((snapshot) => {
         // console.log(snapshot.downloadURL);
         return snapshot.downloadURL
       })
-  console.log(image);
   this.setState({image_url : image})
 
   // update database
@@ -65,19 +62,16 @@ handleSubmit = async () => {
     item_description : this.state.item_description,
     item_price : this.state.item_price
   }
-  const ref = await firebase.firestore().collection('merchants').doc(this.state.userInfo.uid);
 
+  const ref = await firebase.firestore().collection('merchants').doc(uid);
   ref.update({
     menu: firebase.firestore.FieldValue.arrayUnion(res)
-
   })
-  .then(function() {
+  .then(() => {
     console.log("Document successfully written!");
-    (() => {
-      navigation.goBack()
-    })()
+    navigation.goBack()
   })
-  .catch(function(error) {
+  .catch(error => {
       console.error("Error writing document: ", error);
   });
 }
@@ -86,7 +80,7 @@ handleSubmit = async () => {
     return (
 
       <ScrollView>
-        <Card title="Add an item" style={styles.container}>
+        <Card style={styles.container}>
 
         {this.state.item_image_uri == '' ?
           <Icon
